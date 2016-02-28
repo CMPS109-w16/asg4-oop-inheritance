@@ -2,13 +2,11 @@
 
 #include <typeinfo>
 #include <unordered_map>
-#include <math.h>
+#include <cmath>
 using namespace std;
 
 #include "shape.h"
 #include "util.h"
-
-const double PI = 3.141592653589793;
 
 static unordered_map<void*,string> fontname {
    {GLUT_BITMAP_8_BY_13       , "Fixed-8x13"    },
@@ -53,14 +51,14 @@ circle::circle (GLfloat diameter): ellipse (diameter, diameter) {
    DEBUGF ('c', this);
 }
 
-
+// Polygon takes a list of vertices and connects them together in list order.
 polygon::polygon (const vertex_list& vertices): vertices(vertices) {
    DEBUGF ('c', this);
 }
 
 rectangle::rectangle (GLfloat width, GLfloat height):
             polygon({{0, 0}, {width, 0},
-                     {width, height}, {0, height}}) {
+   {width, height}, {0, height}}) {
    DEBUGF ('c', this << "(" << width << "," << height << ")");
 }
 
@@ -72,25 +70,18 @@ void text::draw (const vertex& center, const rgbcolor& color) const {
    DEBUGF ('d', this << "(" << center << "," << color << ")");
 }
 
-//Draw the ellipse
-void ellipse::draw (const vertex& center, const rgbcolor& color)
-                    const
-{
-   //Begin drawing with openGL
-   glBegin (GL_POLYGON);
-   glEnable (GL_LINE_SMOOTH);
-   glColor3d(color.ubvec[0], color.ubvec[1], color.ubvec[2]);
-   const float d = 2 * PI / 32;
-   //Draw theta up until 2_PI delta times
-   for (float t = 0; t < 2 * PI; t += d)
-   {
-      //Calculate the x and y points at each radian
-      float x_pt = dimension.xpos * cos (t) + center.xpos;
-      float y_pt = dimension.ypos * sin (t) + center.ypos;
-      //Draw at that point
-      glVertex2f (x_pt, y_pt);
+void ellipse::draw (const vertex& center, const rgbcolor& color) const {
+   glBegin(GL_POLYGON);          //Interpret vertices as GL_POLYGON
+   glEnable(GL_LINE_SMOOTH);
+   glColor3ubv(color.ubvec);     //Specify the RGBA color of the ellipse
+   const float delta = 2 * M_PI / 32;
+   for(float theta = 0; theta < 2 * M_PI; theta += delta){
+      float xpos = dimension.xpos/2 * cos(theta) + center.xpos;
+      float ypos = dimension.ypos/2 * sin(theta) + center.ypos;
+      glVertex2f(xpos, ypos);    //Specify polygon vertices (x,y)
    }
    glEnd();
+   DEBUGF ('d', this << "(" << center << "," << color << ")");
 }
 
 void polygon::draw (const vertex& center, const rgbcolor& color) const {

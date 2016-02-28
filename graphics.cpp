@@ -54,7 +54,6 @@ void window::reshape (int width, int height) {
    glutPostRedisplay();
 }
 
-
 // Executed when a regular keyboard key is pressed.
 enum {BS=8, TAB=9, ESC=27, SPACE=32, DEL=127};
 void window::keyboard (GLubyte key, int x, int y) {
@@ -65,23 +64,25 @@ void window::keyboard (GLubyte key, int x, int y) {
          window::close();
          break;
       case 'H': case 'h':
-         //move_selected_object (
+         window::move_selected_object(-1, 0);
          break;
       case 'J': case 'j':
-         //move_selected_object (
+         window::move_selected_object(0, -1);
          break;
       case 'K': case 'k':
-         //move_selected_object (
+         window::move_selected_object(0, 1);
          break;
       case 'L': case 'l':
-         //move_selected_object (
+         window::move_selected_object(1, 0);
          break;
       case 'N': case 'n': case SPACE: case TAB:
+         select_object_next();
          break;
       case 'P': case 'p': case BS:
+         select_object_prev();
          break;
       case '0'...'9':
-         //select_object (key - '0');
+         select_object (key - '0');
          break;
       default:
          cerr << (unsigned)key << ": invalid keystroke" << endl;
@@ -90,7 +91,6 @@ void window::keyboard (GLubyte key, int x, int y) {
    glutPostRedisplay();
 }
 
-
 // Executed when a special function key is pressed.
 void window::special (int key, int x, int y) {
    DEBUGF ('g', "key=" << key << ", x=" << x << ", y=" << y);
@@ -119,7 +119,6 @@ void window::special (int key, int x, int y) {
    glutPostRedisplay();
 }
 
-
 void window::motion (int x, int y) {
    DEBUGF ('g', "x=" << x << ", y=" << y);
    window::mus.set (x, y);
@@ -160,7 +159,6 @@ void window::main () {
    glutMainLoop();
 }
 
-
 void mouse::state (int button, int state) {
    switch (button) {
       case GLUT_LEFT_BUTTON: left_state = state; break;
@@ -182,5 +180,30 @@ void mouse::draw() {
       glRasterPos2i (10, 10);
       glutBitmapString (font, (GLubyte*) text.str().c_str());
    }
+}
+
+void window::move_selected_object(int xdelta, int ydelta) {
+   if (objects.size() > 0) {
+      objects.at(selected_obj).move(xdelta, ydelta);
+   }
+}
+
+void window::select_object_next() {
+    if (window::selected_obj == window::objects.size() - 1)
+        selected_obj = 0;
+    else
+        window::selected_obj = window::selected_obj + 1;
+}
+
+void window::select_object_prev() {
+    if (window::selected_obj == 0)
+        selected_obj = window::objects.size() - 1;
+    else
+        window::selected_obj = window::selected_obj - 1;
+}
+
+void window::select_object(size_t obj) {
+    if (obj <  window::objects.size())
+        window::selected_obj = obj;
 }
 

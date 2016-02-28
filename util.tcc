@@ -44,7 +44,6 @@ item_t from_string (const string& that) {
    return result;
 }
 
-
 //
 // Demangle a class name.
 // For __GNUC__, use __cxa_demangle.

@@ -53,7 +53,6 @@ void interpreter::do_define (param begin, param end) {
    objmap.emplace (name, make_shape (++begin, end));
 }
 
-
 void interpreter::do_draw (param begin, param end) {
    DEBUGF ('f', range (begin, end));
    if (end - begin != 4) throw runtime_error ("syntax error");
@@ -65,7 +64,8 @@ void interpreter::do_draw (param begin, param end) {
    rgbcolor color {begin[0]};
    vertex where {from_string<GLfloat> (begin[2]),
                  from_string<GLfloat> (begin[3])};
-   itor->second->draw (where, color);
+   //itor->second->draw (where, color);
+   window::push_back(object(where, color, itor->second));
 }
 
 shape_ptr interpreter::make_shape (param begin, param end) {
@@ -79,48 +79,34 @@ shape_ptr interpreter::make_shape (param begin, param end) {
    return func (begin, end);
 }
 
-// Data to make a text shape.
 shape_ptr interpreter::make_text (param begin, param end) {
    DEBUGF ('f', range (begin, end));
    return make_shared<text> (nullptr, string());
 }
 
-// Data to make an ellipse.
 shape_ptr interpreter::make_ellipse (param begin, param end) {
    DEBUGF ('f', range (begin, end));
-   if(end - begin != 2)
-      throw runtime_error{"Two parameters required"};
-   return make_shared<ellipse>(GLfloat(stof(begin[0])), GLfloat(stof(begin[1])));
+   if(end - begin > 2) throw runtime_error
+            ("make_ellipse: invalid number of args");
+   return make_shared<ellipse> (GLfloat(stof(begin[0])),
+                                GLfloat(stof(begin[1])));
 }
 
-// Data to make a circle.
 shape_ptr interpreter::make_circle (param begin, param end) {
    DEBUGF ('f', range (begin, end));
-   if(end - begin != 1)
-      throw runtime_error{"One parameters required"};
    return make_shared<circle> (GLfloat(stof(begin[0])));
 }
 
-// Data to make a polygon.
 shape_ptr interpreter::make_polygon (param begin, param end) {
    DEBUGF ('f', range (begin, end));
-   vertex_list vert_list;
-   while (begin != end) {
-      vert_list.push_back({GLfloat(stof(begin[0])),
-                           GLfloat(stof(begin[1]))});
-       begin++; begin++;
-   }
-   return make_shared<polygon> (vert_list);
+   return make_shared<polygon> (vertex_list());
 }
 
-// Data to make a rectangle.
 shape_ptr interpreter::make_rectangle (param begin, param end) {
    DEBUGF ('f', range (begin, end));
-   return make_shared<rectangle> (GLfloat(stof(begin[0])),
-                                  GLfloat(stof(begin[1])));
+   return make_shared<rectangle> (GLfloat(stof(begin[0])), GLfloat(stof(begin[1])));
 }
 
-// Data to make a square.
 shape_ptr interpreter::make_square (param begin, param end) {
    DEBUGF ('f', range (begin, end));
    return make_shared<square> (GLfloat(stof(begin[0])));
