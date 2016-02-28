@@ -53,6 +53,8 @@ class shape {
       virtual ~shape() {}
       virtual void draw (const vertex&, const rgbcolor&) const = 0;
       virtual void show (ostream&) const;
+      string find_fontname(void*);
+      void* find_fontcode(string);
 };
 
 //

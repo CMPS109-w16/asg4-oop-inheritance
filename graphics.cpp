@@ -13,6 +13,7 @@ int window::height = 480; // in pixels
 vector<object> window::objects;
 size_t window::selected_obj = 0;
 mouse window::mus;
+int obj_move_speed = 4;
 
 // Executed when window system signals to shut down.
 void window::close() {
@@ -96,22 +97,22 @@ void window::special (int key, int x, int y) {
    DEBUGF ('g', "key=" << key << ", x=" << x << ", y=" << y);
    window::mus.set (x, y);
    switch (key) {
-      case GLUT_KEY_LEFT: //move_selected_object (-1, 0); break;
-      case GLUT_KEY_DOWN: //move_selected_object (0, -1); break;
-      case GLUT_KEY_UP: //move_selected_object (0, +1); break;
-      case GLUT_KEY_RIGHT: //move_selected_object (+1, 0); break;
-      case GLUT_KEY_F1: //select_object (1); break;
-      case GLUT_KEY_F2: //select_object (2); break;
-      case GLUT_KEY_F3: //select_object (3); break;
-      case GLUT_KEY_F4: //select_object (4); break;
-      case GLUT_KEY_F5: //select_object (5); break;
-      case GLUT_KEY_F6: //select_object (6); break;
-      case GLUT_KEY_F7: //select_object (7); break;
-      case GLUT_KEY_F8: //select_object (8); break;
-      case GLUT_KEY_F9: //select_object (9); break;
-      case GLUT_KEY_F10: //select_object (10); break;
-      case GLUT_KEY_F11: //select_object (11); break;
-      case GLUT_KEY_F12: //select_object (12); break;
+      case GLUT_KEY_LEFT: move_selected_object (-1, 0); break;
+      case GLUT_KEY_DOWN: move_selected_object (0, -1); break;
+      case GLUT_KEY_UP: move_selected_object (0, +1); break;
+      case GLUT_KEY_RIGHT: move_selected_object (+1, 0); break;
+      case GLUT_KEY_F1: select_object (1); break;
+      case GLUT_KEY_F2: select_object (2); break;
+      case GLUT_KEY_F3: select_object (3); break;
+      case GLUT_KEY_F4: select_object (4); break;
+      case GLUT_KEY_F5: select_object (5); break;
+      case GLUT_KEY_F6: select_object (6); break;
+      case GLUT_KEY_F7: select_object (7); break;
+      case GLUT_KEY_F8: select_object (8); break;
+      case GLUT_KEY_F9: select_object (9); break;
+      case GLUT_KEY_F10: select_object (10); break;
+      case GLUT_KEY_F11: select_object (11); break;
+      case GLUT_KEY_F12: select_object (12); break;
       default:
          cerr << (unsigned)key << ": invalid function key" << endl;
          break;
@@ -184,7 +185,7 @@ void mouse::draw() {
 
 void window::move_selected_object(int xdelta, int ydelta) {
    if (objects.size() > 0) {
-      objects.at(selected_obj).move(xdelta, ydelta);
+      objects.at(selected_obj).move(xdelta * obj_move_speed, ydelta * obj_move_speed);
    }
 }
 

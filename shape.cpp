@@ -28,6 +28,16 @@ static unordered_map<string,void*> fontcode {
    {"Times-Roman-24", GLUT_BITMAP_TIMES_ROMAN_24},
 };
 
+string find_fontname(void* func_font){
+   auto i = fontname.find(func_font);
+   return i->second;
+}
+
+void* find_fontcode(string font_name){
+   auto i = fontcode.find(font_name);
+   return i->second;
+}
+
 ostream& operator<< (ostream& out, const vertex& where) {
    out << "(" << where.xpos << "," << where.ypos << ")";
    return out;

@@ -81,7 +81,15 @@ shape_ptr interpreter::make_shape (param begin, param end) {
 
 shape_ptr interpreter::make_text (param begin, param end) {
    DEBUGF ('f', range (begin, end));
-   return make_shared<text> (nullptr, string());
+//   void* font = shape.find_fontcode(begin[0]);
+   string textbody;
+   bool space = false;
+   for (auto itor = ++begin; itor != end; ++itor){
+      if (space) textbody += " ";
+      textbody += *itor;
+      space = true;
+   }
+   return make_shared<text> (nullptr, textbody);
 }
 
 shape_ptr interpreter::make_ellipse (param begin, param end) {
