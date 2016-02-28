@@ -95,28 +95,42 @@ shape_ptr interpreter::make_text (param begin, param end) {
 shape_ptr interpreter::make_ellipse (param begin, param end) {
    DEBUGF ('f', range (begin, end));
    if(end - begin > 2) throw runtime_error
-            ("make_ellipse: invalid number of args");
+            ("Make_ellipse: invalid number of args. Need 2.");
    return make_shared<ellipse> (GLfloat(stof(begin[0])),
                                 GLfloat(stof(begin[1])));
 }
 
 shape_ptr interpreter::make_circle (param begin, param end) {
    DEBUGF ('f', range (begin, end));
+   if(end - begin != 1) throw runtime_error
+   ("make_circle: invalid number of args. Need 1.");
    return make_shared<circle> (GLfloat(stof(begin[0])));
 }
 
 shape_ptr interpreter::make_polygon (param begin, param end) {
    DEBUGF ('f', range (begin, end));
-   return make_shared<polygon> (vertex_list());
+   if(((end - begin) % 2 )== 1 ) throw runtime_error
+            ("make_polygon: invalid number of args. Need an even number.");
+
+   vertex_list vert_list{};
+   for (auto itor = begin; itor != end; ++itor) {
+      vertex vert{stof(*itor++), stof(*itor)};
+      vert_list.push_back(vert);
+   }
+   return make_shared<polygon> (vert_list);
 }
 
 shape_ptr interpreter::make_rectangle (param begin, param end) {
    DEBUGF ('f', range (begin, end));
+   if(end - begin != 2) throw runtime_error
+            ("make_rectangle: invalid number of args. Need 2.");
    return make_shared<rectangle> (GLfloat(stof(begin[0])), GLfloat(stof(begin[1])));
 }
 
 shape_ptr interpreter::make_square (param begin, param end) {
    DEBUGF ('f', range (begin, end));
+   if(end - begin != 1) throw runtime_error
+            ("make_square: invalid number of args. Need 1.");
    return make_shared<square> (GLfloat(stof(begin[0])));
 }
 
