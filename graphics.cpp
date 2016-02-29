@@ -1,4 +1,6 @@
 // $Id: graphics.cpp,v 1.1 2015-07-16 16:47:51-07 - - $
+// Partner: Darius Sakhapour(dsakhapo@ucsc.edu)
+// Partner: Ryan Wong (rystwong@ucsc.edu)
 
 #include <iostream>
 using namespace std;
@@ -15,7 +17,7 @@ vector<object> window::objects;
 size_t window::selected_obj = 0;
 mouse window::mus;
 int window::thickness = 4;
-string window::color = "grey";
+string window::color = "red";
 bool window::draw_border = false;
 bool window::first_run = true;
 

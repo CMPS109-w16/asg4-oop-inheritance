@@ -1,4 +1,7 @@
 // $Id: shape.cpp,v 1.1 2015-07-16 16:47:51-07 - - $
+// Partner: Darius Sakhapour(dsakhapo@ucsc.edu)
+// Partner: Ryan Wong (rystwong@ucsc.edu)
+
 
 #include <typeinfo>
 #include <unordered_map>
@@ -107,10 +110,14 @@ equilateral::equilateral(GLfloat width) :
 }
 
 void text::draw(const vertex& center, const rgbcolor& color) const {
-   glColor3ubv(color.ubvec);
+   //Highlight all of the text if its selected
+   glColor3ubv(
+            window::get_draw_border() ?
+                     rgbcolor(window::get_color()).ubvec : color.ubvec);
    glRasterPos2f(center.xpos, center.ypos);
    glutBitmapString(glut_bitmap_font,
             reinterpret_cast<const GLubyte*>(textdata.c_str()));
+   glEnd();
    DEBUGF('d', this << "(" << center << "," << color << ")");
 }
 
@@ -159,6 +166,20 @@ void polygon::draw(const vertex& center, const rgbcolor& color) const {
       glVertex2f(xpos, ypos);
    }
    glEnd();
+
+   if (window::get_draw_border()) {
+      glLineWidth(window::get_thickness());
+      glBegin(GL_LINE_LOOP);
+      glEnable(GL_LINE_SMOOTH);
+      glColor3ubv(rgbcolor(window::get_color()).ubvec);
+      for (auto itor = vertices.cbegin(); itor != vertices.cend();
+               ++itor) {
+         float xpos = center.xpos + itor->xpos - xavg;
+         float ypos = center.ypos + itor->ypos - yavg;
+         glVertex2f(xpos, ypos);
+      }
+      glEnd();
+   }
    DEBUGF('d', this << "(" << center << "," << color << ")");
 }
 
