@@ -70,12 +70,13 @@ class window {
       static void setwidth (int width_) { width = width_; }
       static void setheight (int height_) { height = height_; }
       static void main();
-      // Object Selection and Movement Functions
-      static void move_selected_object(int, int);
+      // Object Selection Functions
       static void select_object_next();
       static void select_object_prev();
       static void select_object(size_t obj);
       static bool selected;
+      // Object Movement Functions
+      static void move_selected_object(int, int);
       static void moveby(int speed) {obj_speed = speed;}
       static int get_obj_speed() {return obj_speed;}
 };

@@ -10,7 +10,7 @@ using namespace std;
 
 int window::width = 640; // in pixels
 int window::height = 480; // in pixels
-int window::obj_speed = 4;
+int window::obj_speed = 4; // in pixels per keystroke.
 vector<object> window::objects;
 size_t window::selected_obj = 0;
 mouse window::mus;
@@ -185,7 +185,8 @@ void mouse::draw() {
 
 void window::move_selected_object(int xdelta, int ydelta) {
    if (objects.size() > 0) {
-      objects.at(selected_obj).move(xdelta * window::get_obj_speed(), ydelta * window::get_obj_speed());
+      objects.at(selected_obj).move(xdelta * window::get_obj_speed(),
+               ydelta * window::get_obj_speed());
    }
 }
 

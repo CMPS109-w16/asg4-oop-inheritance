@@ -76,6 +76,21 @@ square::square (GLfloat width): rectangle (width, width) {
    DEBUGF ('c', this);
 }
 
+triangle::triangle(const vertex_list& vertices): polygon(vertices) {
+   DEBUGF ('c', this);
+}
+
+
+equilateral::equilateral(GLfloat width) :
+                  polygon(
+                           { { 0, 0 }, { width, 0 }, { width / 2, width
+                                    * GLfloat(0.866025404) } }) {
+   // .866025404*width is the relative scalar height for an equilateral
+   // triangle knowing the length of its sides. It was computed via
+   // Pythagorian Theorem.
+   DEBUGF('c', this);
+}
+
 void text::draw (const vertex& center, const rgbcolor& color) const {
    DEBUGF ('d', this << "(" << center << "," << color << ")");
 }

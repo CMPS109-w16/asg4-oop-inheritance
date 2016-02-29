@@ -27,6 +27,8 @@ interpreter::factory_map {
    {"polygon"  , &interpreter::make_polygon  },
    {"rectangle", &interpreter::make_rectangle},
    {"square"   , &interpreter::make_square   },
+   {"triangle", &interpreter::make_triangle},
+   {"equilateral"   , &interpreter::make_equilateral   },
 };
 
 interpreter::shape_map interpreter::objmap;
@@ -140,3 +142,23 @@ shape_ptr interpreter::make_square (param begin, param end) {
    return make_shared<square> (GLfloat(stof(begin[0])));
 }
 
+shape_ptr interpreter::make_triangle (param begin, param end) {
+   DEBUGF ('f', range (begin, end));
+   if(((end - begin) % 2 )== 1 or (end - begin) != 6) throw runtime_error
+            ("make_polygon: invalid number of args. Need 6.");
+
+   vertex_list vert_list{};
+   for (auto itor = begin; itor != end; ++itor) {
+      vertex vert{stof(*itor++), stof(*itor)};
+      vert_list.push_back(vert);
+   }
+   return make_shared<triangle> (vert_list);
+}
+
+shape_ptr interpreter::make_equilateral (param begin, param end) {
+   DEBUGF ('f', range (begin, end));
+   if((end - begin) != 1) throw runtime_error
+            ("make_equilateral: invalid number of args. Need 1.");
+
+   return make_shared<equilateral> (GLfloat(stof(begin[0])));
+}
