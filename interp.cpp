@@ -16,6 +16,7 @@ unordered_map<string,interpreter::interpreterfn>
 interpreter::interp_map {
    {"define" , &interpreter::do_define },
    {"draw"   , &interpreter::do_draw   },
+   {"moveby"   , &interpreter::do_moveby  },
 };
 
 unordered_map<string,interpreter::factoryfn>
@@ -66,6 +67,11 @@ void interpreter::do_draw (param begin, param end) {
                  from_string<GLfloat> (begin[3])};
    //itor->second->draw (where, color);
    window::push_back(object(where, color, itor->second));
+}
+
+void interpreter::do_moveby (param begin, param end) {
+   DEBUGF ('f', range (begin, end));
+   window::moveby(stoi(*begin));
 }
 
 shape_ptr interpreter::make_shape (param begin, param end) {

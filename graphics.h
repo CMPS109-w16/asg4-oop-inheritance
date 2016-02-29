@@ -53,6 +53,7 @@ class window {
       static vector<object> objects;
       static size_t selected_obj;
       static mouse mus;
+      static int obj_speed;
    private:
       static void close();
       static void entry (int mouse_entered);
@@ -70,11 +71,13 @@ class window {
       static void setheight (int height_) { height = height_; }
       static void main();
       // Object Selection and Movement Functions
-      static void move_selected_object(int dx, int dy);
+      static void move_selected_object(int, int);
       static void select_object_next();
       static void select_object_prev();
       static void select_object(size_t obj);
       static bool selected;
+      static void moveby(int speed) {obj_speed = speed;}
+      static int get_obj_speed() {return obj_speed;}
 };
 
 #endif

@@ -10,10 +10,10 @@ using namespace std;
 
 int window::width = 640; // in pixels
 int window::height = 480; // in pixels
+int window::obj_speed = 4;
 vector<object> window::objects;
 size_t window::selected_obj = 0;
 mouse window::mus;
-int obj_move_speed = 4;
 
 // Executed when window system signals to shut down.
 void window::close() {
@@ -185,7 +185,7 @@ void mouse::draw() {
 
 void window::move_selected_object(int xdelta, int ydelta) {
    if (objects.size() > 0) {
-      objects.at(selected_obj).move(xdelta * obj_move_speed, ydelta * obj_move_speed);
+      objects.at(selected_obj).move(xdelta * window::get_obj_speed(), ydelta * window::get_obj_speed());
    }
 }
 
