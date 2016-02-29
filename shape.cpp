@@ -7,6 +7,7 @@ using namespace std;
 
 #include "shape.h"
 #include "util.h"
+#include "graphics.h"
 
 static unordered_map<void*,string> fontname {
    {GLUT_BITMAP_8_BY_13       , "Fixed-8x13"    },
@@ -34,6 +35,11 @@ string find_fontname(void* func_font){
 }
 
 void* find_fontcode(string font_name){
+   auto i = fontcode.find(font_name);
+   return i->second;
+}
+
+void* search_fontcode(const string& font_name){
    auto i = fontcode.find(font_name);
    return i->second;
 }
@@ -100,26 +106,64 @@ equilateral::equilateral(GLfloat width) :
    DEBUGF('c', this);
 }
 
-void text::draw (const vertex& center, const rgbcolor& color) const {
-   DEBUGF ('d', this << "(" << center << "," << color << ")");
+void text::draw(const vertex& center, const rgbcolor& color) const {
+   glColor3ubv(color.ubvec);
+   glRasterPos2f(center.xpos, center.ypos);
+   glutBitmapString(glut_bitmap_font,
+            reinterpret_cast<const GLubyte*>(textdata.c_str()));
+   DEBUGF('d', this << "(" << center << "," << color << ")");
 }
 
-void ellipse::draw (const vertex& center, const rgbcolor& color) const {
+void ellipse::draw(const vertex& center, const rgbcolor& color) const {
    glBegin(GL_POLYGON);          //Interpret vertices as GL_POLYGON
    glEnable(GL_LINE_SMOOTH);
    glColor3ubv(color.ubvec);     //Specify the RGBA color of the ellipse
    const float delta = 2 * M_PI / 32;
-   for(float theta = 0; theta < 2 * M_PI; theta += delta){
-      float xpos = dimension.xpos/2 * cos(theta) + center.xpos;
-      float ypos = dimension.ypos/2 * sin(theta) + center.ypos;
+   for (float theta = 0; theta < 2 * M_PI; theta += delta) {
+      float xpos = dimension.xpos / 2 * cos(theta) + center.xpos;
+      float ypos = dimension.ypos / 2 * sin(theta) + center.ypos;
       glVertex2f(xpos, ypos);    //Specify polygon vertices (x,y)
    }
    glEnd();
-   DEBUGF ('d', this << "(" << center << "," << color << ")");
+
+//   if(window::get_objects().at(window::get_selected_obj()).get_selected()) {
+//   for (size_t i = 0; i != window::get_objects().size(); ++i) {
+//   for (auto i = window::get_objects().begin();
+//            i != window::get_objects().end(); ++i) {
+//      if (i->get_selected()) {
+   glLineWidth(window::get_thickness());
+   glBegin(GL_LINE_LOOP);
+   glEnable(GL_LINE_SMOOTH);
+   glColor3ubv(rgbcolor(window::get_color()).ubvec);
+   for (float theta = 0; theta < 2 * M_PI; theta += delta) {
+      float xpos = dimension.xpos / 2 * cos(theta) + center.xpos;
+      float ypos = dimension.ypos / 2 * sin(theta) + center.ypos;
+      glVertex2f(xpos, ypos);
+//         }
+   }
+   glEnd();
+   DEBUGF('d', this << "(" << center << "," << color << ")");
 }
 
-void polygon::draw (const vertex& center, const rgbcolor& color) const {
-   DEBUGF ('d', this << "(" << center << "," << color << ")");
+void polygon::draw(const vertex& center, const rgbcolor& color) const {
+   float xavg = 0;   //Need the x and y average to calculate
+   float yavg = 0;   //the center of the polygon
+   for (const auto& vertex : vertices) {
+      xavg += vertex.xpos;
+      yavg += vertex.ypos;
+   }
+   xavg /= vertices.size();
+   yavg /= vertices.size();
+   glBegin(GL_POLYGON);
+   glEnable(GL_LINE_SMOOTH);
+   glColor3ubv(color.ubvec);
+   for (auto itor = vertices.cbegin(); itor != vertices.cend(); ++itor) {
+      float xpos = center.xpos + itor->xpos - xavg;
+      float ypos = center.ypos + itor->ypos - yavg;
+      glVertex2f(xpos, ypos);
+   }
+   glEnd();
+   DEBUGF('d', this << "(" << center << "," << color << ")");
 }
 
 void shape::show (ostream& out) const {

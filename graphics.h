@@ -85,6 +85,12 @@ class window {
       static int get_obj_speed() {return obj_speed;}
       static void border(const string& c, int t)
          { color = c; thickness = t; }
+      // Getters
+      static vector<object> get_objects (){return objects; }
+      static size_t get_selected_obj() {return selected_obj;}
+      static int get_thickness() {return thickness;}
+      static string get_color() {return color;}
+
 };
 
 #endif

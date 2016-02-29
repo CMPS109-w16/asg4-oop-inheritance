@@ -96,7 +96,7 @@ shape_ptr interpreter::make_shape (param begin, param end) {
 
 shape_ptr interpreter::make_text (param begin, param end) {
    DEBUGF ('f', range (begin, end));
-//   void* font = shape.find_fontcode(begin[0]);
+   void* font = search_fontcode(*begin);
    string textbody;
    bool space = false;
    for (auto itor = ++begin; itor != end; ++itor){
@@ -104,7 +104,7 @@ shape_ptr interpreter::make_text (param begin, param end) {
       textbody += *itor;
       space = true;
    }
-   return make_shared<text> (nullptr, textbody);
+   return make_shared<text> (font, textbody);
 }
 
 shape_ptr interpreter::make_ellipse (param begin, param end) {
