@@ -126,22 +126,18 @@ void ellipse::draw(const vertex& center, const rgbcolor& color) const {
    }
    glEnd();
 
-//   if(window::get_objects().at(window::get_selected_obj()).get_selected()) {
-//   for (size_t i = 0; i != window::get_objects().size(); ++i) {
-//   for (auto i = window::get_objects().begin();
-//            i != window::get_objects().end(); ++i) {
-//      if (i->get_selected()) {
-   glLineWidth(window::get_thickness());
-   glBegin(GL_LINE_LOOP);
-   glEnable(GL_LINE_SMOOTH);
-   glColor3ubv(rgbcolor(window::get_color()).ubvec);
-   for (float theta = 0; theta < 2 * M_PI; theta += delta) {
-      float xpos = dimension.xpos / 2 * cos(theta) + center.xpos;
-      float ypos = dimension.ypos / 2 * sin(theta) + center.ypos;
-      glVertex2f(xpos, ypos);
-//         }
+   if (window::get_draw_border()) {
+      glLineWidth(window::get_thickness());
+      glBegin(GL_LINE_LOOP);
+      glEnable(GL_LINE_SMOOTH);
+      glColor3ubv(rgbcolor(window::get_color()).ubvec);
+      for (float theta = 0; theta < 2 * M_PI; theta += delta) {
+         float xpos = dimension.xpos / 2 * cos(theta) + center.xpos;
+         float ypos = dimension.ypos / 2 * sin(theta) + center.ypos;
+         glVertex2f(xpos, ypos);
+      }
+      glEnd();
    }
-   glEnd();
    DEBUGF('d', this << "(" << center << "," << color << ")");
 }
 

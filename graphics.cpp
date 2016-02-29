@@ -16,6 +16,8 @@ size_t window::selected_obj = 0;
 mouse window::mus;
 int window::thickness = 4;
 string window::color = "grey";
+bool window::draw_border = false;
+
 // Executed when window system signals to shut down.
 void window::close() {
    DEBUGF ('g', sys_info::execname() << ": exit ("
@@ -37,7 +39,15 @@ void window::entry (int mouse_entered) {
 // Called to display the objects in the window.
 void window::display() {
    glClear (GL_COLOR_BUFFER_BIT);
-   for (auto& object: window::objects) object.draw();
+   for (auto& object: window::objects){
+      if(object.get_selected()){
+         window::set_draw_border(true);
+         object.draw();
+      } else {
+         window::set_draw_border(false);
+         object.draw();
+      }
+   }
    mus.draw();
    glutSwapBuffers();
 }
@@ -210,6 +220,7 @@ void window::select_object_prev() {
    }
    window::objects.at(selected_obj).set_selected(true);
 }
+
 void window::select_object(size_t obj) {
    if (window::objects.size() - 1 < obj)
       throw runtime_error("No such index exists");
