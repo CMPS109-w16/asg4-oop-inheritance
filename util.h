@@ -1,14 +1,12 @@
 // $Id: util.h,v 1.1 2015-07-16 16:47:51-07 - - $
-// Partner: Darius Sakhapour(dsakhapo@ucsc.edu)
-// Partner: Ryan Wong (rystwong@ucsc.edu)
-
 
 //
 // util -
 //    A utility class to provide various services not conveniently
 //    included in other modules.
 //
-
+// Partner: Darius Sakhapour(dsakhapo@ucsc.edu)
+// Partner: Ryan Wong (rystwong@ucsc.edu)
 #ifndef __UTIL_H__
 #define __UTIL_H__
 

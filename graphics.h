@@ -1,7 +1,6 @@
 // $Id: graphics.h,v 1.1 2015-07-16 16:47:51-07 - - $
 // Partner: Darius Sakhapour(dsakhapo@ucsc.edu)
 // Partner: Ryan Wong (rystwong@ucsc.edu)
-
 #ifndef __GRAPHICS_H__
 #define __GRAPHICS_H__
 
@@ -31,8 +30,9 @@ class object {
          center.xpos += delta_x;
          center.ypos += delta_y;
       }
-      void set_selected(bool select) {selected = select;}
-      bool get_selected(){return selected;}
+      void set_selected(bool select) { selected = select; }
+      bool get_selected() { return selected; }
+      vertex get_center() { return center; }
 };
 
 class mouse {
@@ -83,6 +83,7 @@ class window {
       static void select_object_next();
       static void select_object_prev();
       static void select_object(size_t obj);
+      static void draw_num(object, size_t);
       // Object Movement Functions
       static void move_selected_object(int, int);
       static void moveby(int speed) {obj_speed = speed;}
@@ -90,14 +91,14 @@ class window {
       static void border(const string& c, int t)
          { color = c; thickness = t; }
       // Getters
-      static vector<object> get_objects (){return objects; }
-      static size_t get_selected_obj() {return selected_obj;}
-      static int get_thickness() {return thickness;}
-      static string get_color() {return color;}
-      static bool get_draw_border(){return draw_border;}
-      static void set_draw_border(bool border){draw_border = border;}
-      static bool get_first_run(){return first_run;}
-      static void set_first_run(bool run){first_run = run;}
+      static vector<object> get_objects (){ return objects; }
+      static size_t get_selected_obj() { return selected_obj; }
+      static int get_thickness() { return thickness; }
+      static string get_color() { return color; }
+      static bool get_draw_border(){ return draw_border; }
+      static void set_draw_border(bool border){ draw_border = border; }
+      static bool get_first_run(){ return first_run; }
+      static void set_first_run(bool run){ first_run = run; }
 };
 
 #endif

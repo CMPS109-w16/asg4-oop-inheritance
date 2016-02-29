@@ -1,7 +1,6 @@
 // $Id: graphics.cpp,v 1.1 2015-07-16 16:47:51-07 - - $
 // Partner: Darius Sakhapour(dsakhapo@ucsc.edu)
 // Partner: Ryan Wong (rystwong@ucsc.edu)
-
 #include <iostream>
 using namespace std;
 
@@ -42,20 +41,23 @@ void window::entry (int mouse_entered) {
 // Called to display the objects in the window.
 void window::display() {
    glClear(GL_COLOR_BUFFER_BIT);
+   size_t obj_num = 0;
    for (auto& object : window::objects) {
-      if (window::get_first_run()){
+      if (window::get_first_run()) {
          object.set_selected(true);
          window::set_first_run(false);
       }
-         if (object.get_selected()) {
-            window::set_draw_border(true);
-            object.draw();
-         } else {
-            window::set_draw_border(false);
-            object.draw();
-         }
+      if (object.get_selected()) {
+         window::set_draw_border(true);
+         object.draw();
+         if(obj_num < 10) window::draw_num(object, obj_num);
+      } else {
+         window::set_draw_border(false);
+         object.draw();
+         if(obj_num < 10) window::draw_num(object, obj_num);
       }
-
+      ++obj_num;
+   }
    mus.draw();
    glutSwapBuffers();
 }
@@ -201,6 +203,16 @@ void mouse::draw() {
       glutBitmapString (font, (GLubyte*) text.str().c_str());
    }
 }
+void window::draw_num(object obj, size_t obj_num) {
+   int width = glutBitmapWidth(GLUT_BITMAP_8_BY_13, 'c');
+            vertex center = obj.get_center();
+            static rgbcolor color ("white");
+            glColor3ubv(color.ubvec);
+            glRasterPos2f(center.xpos - width/2, center.ypos - width/4);
+            glutBitmapString(GLUT_BITMAP_8_BY_13,
+               reinterpret_cast<const unsigned char*>
+               (to_string(obj_num).c_str()));
+}
 
 void window::move_selected_object(int xdelta, int ydelta) {
    if (objects.size() > 0) {
@@ -231,16 +243,11 @@ void window::select_object_prev() {
 
 void window::select_object(size_t obj) {
    if (window::objects.size() - 1 < obj)
-      throw runtime_error("No such index exists");
-   window::objects.at(selected_obj).set_selected(false);
-   window::selected_obj = obj;
-   window::objects.at(selected_obj).set_selected(true);
-//    Leftover debugging code. Remove with final release.
-//   for(auto i = window::objects.begin(); i != window::objects.end(); ++i){
-//      if(i->get_selected()) cout << "true";
-//      else cout << "false";
-//      cout << endl;
-//   }
-//   cout << "---" << endl;
+      cout << "No such Index exists" << endl;
+   else{
+      window::objects.at(selected_obj).set_selected(false);
+      window::selected_obj = obj;
+      window::objects.at(selected_obj).set_selected(true);
+   }
 }
 

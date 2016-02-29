@@ -1,8 +1,6 @@
 // $Id: shape.h,v 1.1 2015-07-16 16:47:51-07 - - $
 // Partner: Darius Sakhapour(dsakhapo@ucsc.edu)
 // Partner: Ryan Wong (rystwong@ucsc.edu)
-
-
 #ifndef __SHAPE_H__
 #define __SHAPE_H__
 
@@ -40,6 +38,7 @@ using vertex_list = vector<vertex>;
 using shape_ptr = shared_ptr<shape>; 
 
 void* search_fontcode(const string&);
+
 //
 // Abstract base class for all shapes in this system.
 //
