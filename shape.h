@@ -36,6 +36,7 @@ struct vertex {GLfloat xpos; GLfloat ypos; };
 using vertex_list = vector<vertex>;
 using shape_ptr = shared_ptr<shape>; 
 
+void* search_fontcode(const string&);
 //
 // Abstract base class for all shapes in this system.
 //

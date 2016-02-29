@@ -16,21 +16,21 @@ unordered_map<string,interpreter::interpreterfn>
 interpreter::interp_map {
    {"define" , &interpreter::do_define },
    {"draw"   , &interpreter::do_draw   },
-   {"moveby"   , &interpreter::do_moveby  },
+   {"moveby" , &interpreter::do_moveby },
    {"border" , &interpreter::do_border },
 };
 
 unordered_map<string,interpreter::factoryfn>
 interpreter::factory_map {
-   {"text"     , &interpreter::make_text     },
-   {"ellipse"  , &interpreter::make_ellipse  },
-   {"circle"   , &interpreter::make_circle   },
-   {"polygon"  , &interpreter::make_polygon  },
-   {"rectangle", &interpreter::make_rectangle},
-   {"square"   , &interpreter::make_square   },
-   {"diamond"   , &interpreter::make_diamond   },
-   {"triangle", &interpreter::make_triangle},
-   {"equilateral"   , &interpreter::make_equilateral   },
+   {"text"        , &interpreter::make_text        },
+   {"ellipse"     , &interpreter::make_ellipse     },
+   {"circle"      , &interpreter::make_circle      },
+   {"polygon"     , &interpreter::make_polygon     },
+   {"rectangle"   , &interpreter::make_rectangle   },
+   {"square"      , &interpreter::make_square      },
+   {"diamond"     , &interpreter::make_diamond     },
+   {"triangle"    , &interpreter::make_triangle    },
+   {"equilateral" , &interpreter::make_equilateral },
 };
 
 interpreter::shape_map interpreter::objmap;
@@ -96,7 +96,7 @@ shape_ptr interpreter::make_shape (param begin, param end) {
 
 shape_ptr interpreter::make_text (param begin, param end) {
    DEBUGF ('f', range (begin, end));
-//   void* font = shape.find_fontcode(begin[0]);
+   void* font = search_fontcode(*begin);
    string textbody;
    bool space = false;
    for (auto itor = ++begin; itor != end; ++itor){
@@ -104,7 +104,7 @@ shape_ptr interpreter::make_text (param begin, param end) {
       textbody += *itor;
       space = true;
    }
-   return make_shared<text> (nullptr, textbody);
+   return make_shared<text> (font, textbody);
 }
 
 shape_ptr interpreter::make_ellipse (param begin, param end) {
@@ -126,7 +126,6 @@ shape_ptr interpreter::make_polygon (param begin, param end) {
    DEBUGF ('f', range (begin, end));
    if(((end - begin) % 2 )== 1 ) throw runtime_error
             ("make_polygon: invalid number of args. Need an even number.");
-
    vertex_list vert_list{};
    for (auto itor = begin; itor != end; ++itor) {
       vertex vert{stof(*itor++), stof(*itor)};
@@ -139,7 +138,8 @@ shape_ptr interpreter::make_rectangle (param begin, param end) {
    DEBUGF ('f', range (begin, end));
    if(end - begin != 2) throw runtime_error
             ("make_rectangle: invalid number of args. Need 2.");
-   return make_shared<rectangle> (GLfloat(stof(begin[0])), GLfloat(stof(begin[1])));
+   return make_shared<rectangle> (GLfloat(stof(begin[0])),
+            GLfloat(stof(begin[1])));
 }
 
 shape_ptr interpreter::make_square (param begin, param end) {
@@ -153,14 +153,14 @@ shape_ptr interpreter::make_diamond (param begin, param end) {
    DEBUGF ('f', range (begin, end));
    if(end - begin != 2) throw runtime_error
             ("make_diamond: invalid number of args. Need 1.");
-   return make_shared<diamond> (GLfloat(stof(begin[0])), GLfloat(stof(begin[1])));
+   return make_shared<diamond> (GLfloat(stof(begin[0])),
+            GLfloat(stof(begin[1])));
 }
 
 shape_ptr interpreter::make_triangle (param begin, param end) {
    DEBUGF ('f', range (begin, end));
-   if(((end - begin) % 2 )== 1 or (end - begin) != 6) throw runtime_error
+   if(((end - begin) % 2 ) == 1 or (end - begin) != 6) throw runtime_error
             ("make_triangle: invalid number of args. Need 6.");
-
    vertex_list vert_list{};
    for (auto itor = begin; itor != end; ++itor) {
       vertex vert{stof(*itor++), stof(*itor)};

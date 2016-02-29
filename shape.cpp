@@ -38,6 +38,11 @@ void* find_fontcode(string font_name){
    return i->second;
 }
 
+void* search_fontcode(const string& font_name){
+   auto i = fontcode.find(font_name);
+   return i->second;
+}
+
 ostream& operator<< (ostream& out, const vertex& where) {
    out << "(" << where.xpos << "," << where.ypos << ")";
    return out;
@@ -77,11 +82,10 @@ square::square (GLfloat width): rectangle (width, width) {
 }
 
 diamond::diamond(const GLfloat width, const GLfloat height) :
-                  polygon(
-                           { { 0, GLfloat(.5) * height }, { GLfloat(.5)
-                                    * width, 0 }, { width, GLfloat(.5)
-                                    * height }, { GLfloat(.5) * width,
-                                    height } }) {
+         polygon(
+                  { { 0, GLfloat(.5) * height }, { GLfloat(.5) * width,
+                           0 }, { width, GLfloat(.5) * height }, {
+                           GLfloat(.5) * width, height } }) {
    DEBUGF('c', this);
 }
 
@@ -91,9 +95,9 @@ triangle::triangle(const vertex_list& vertices): polygon(vertices) {
 
 
 equilateral::equilateral(GLfloat width) :
-                  polygon(
-                           { { 0, 0 }, { width, 0 }, { width / 2, width
-                                    * GLfloat(0.866025404) } }) {
+         polygon(
+                  { { 0, 0 }, { width, 0 }, { width / 2, width
+                           * GLfloat(0.866025404) } }) {
    // .866025404*width is the relative scalar height for an equilateral
    // triangle knowing the length of its sides. It was computed via
    // Pythagorian Theorem.
@@ -101,6 +105,10 @@ equilateral::equilateral(GLfloat width) :
 }
 
 void text::draw (const vertex& center, const rgbcolor& color) const {
+   glColor3ubv(color.ubvec);
+   glRasterPos2f(center.xpos, center.ypos);
+   glutBitmapString(glut_bitmap_font,
+            reinterpret_cast<const GLubyte*>(textdata.c_str()));
    DEBUGF ('d', this << "(" << center << "," << color << ")");
 }
 
@@ -119,6 +127,22 @@ void ellipse::draw (const vertex& center, const rgbcolor& color) const {
 }
 
 void polygon::draw (const vertex& center, const rgbcolor& color) const {
+   float xavg = 0; //Need the x and y average to calculate
+   float yavg = 0; //the center of the polygon
+   for(const auto& vertex: vertices){
+      xavg += vertex.xpos;
+      yavg += vertex.ypos;
+   }
+   xavg /= vertices.size(); yavg /= vertices.size();
+   glBegin(GL_POLYGON);
+   glEnable(GL_LINE_SMOOTH);
+   glColor3ubv(color.ubvec);
+   for(auto itor = vertices.cbegin(); itor != vertices.cend(); ++itor){
+      float xpos = center.xpos + itor->xpos - xavg;
+      float ypos = center.ypos + itor->ypos - yavg;
+      glVertex2f(xpos, ypos);
+   }
+   glEnd();
    DEBUGF ('d', this << "(" << center << "," << color << ")");
 }
 
