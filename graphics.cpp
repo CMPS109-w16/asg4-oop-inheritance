@@ -14,7 +14,8 @@ int window::obj_speed = 4; // in pixels per keystroke.
 vector<object> window::objects;
 size_t window::selected_obj = 0;
 mouse window::mus;
-bool window::selected = false;
+//bool window::selected = false;
+//bool object::selected = false;
 int window::thickness = 4;
 string window::color = "red";
 
@@ -194,21 +195,36 @@ void window::move_selected_object(int xdelta, int ydelta) {
 }
 
 void window::select_object_next() {
-    if (window::selected_obj == window::objects.size() - 1)
-        selected_obj = 0;
-    else
-        window::selected_obj = window::selected_obj + 1;
+   window::objects.at(selected_obj).set_selected(false);
+   if (window::selected_obj == window::objects.size() - 1) {
+      selected_obj = 0;
+   } else {
+      window::selected_obj = window::selected_obj + 1;
+   }
+   window::objects.at(selected_obj).set_selected(true);
 }
 
 void window::select_object_prev() {
-    if (window::selected_obj == 0)
-        selected_obj = window::objects.size() - 1;
-    else
-        window::selected_obj = window::selected_obj - 1;
+   window::objects.at(selected_obj).set_selected(false);
+   if (window::selected_obj == 0) {
+      selected_obj = window::objects.size() - 1;
+   } else {
+      window::selected_obj = window::selected_obj - 1;
+   }
+   window::objects.at(selected_obj).set_selected(true);
 }
-
 void window::select_object(size_t obj) {
-    if (obj <  window::objects.size())
-        window::selected_obj = obj;
+   if (window::objects.size() - 1 < obj)
+      throw runtime_error("No such index exists");
+   window::objects.at(selected_obj).set_selected(false);
+   window::selected_obj = obj;
+   window::objects.at(selected_obj).set_selected(true);
+//    Leftover debugging code. Remove with final release.
+//   for(auto i = window::objects.begin(); i != window::objects.end(); ++i){
+//      if(i->get_selected()) cout << "true";
+//      else cout << "false";
+//      cout << endl;
+//   }
+//   cout << "---" << endl;
 }
 

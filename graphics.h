@@ -17,6 +17,7 @@ class object {
       shared_ptr<shape> pshape;
       vertex center;
       rgbcolor color;
+      bool selected = false;
    public:
       // Default copiers, movers, dtor all OK.
       object();
@@ -28,6 +29,8 @@ class object {
          center.xpos += delta_x;
          center.ypos += delta_y;
       }
+      void set_selected(bool select) {selected = select;}
+      bool get_selected(){return selected;}
 };
 
 class mouse {
@@ -76,7 +79,6 @@ class window {
       static void select_object_next();
       static void select_object_prev();
       static void select_object(size_t obj);
-      static bool selected;
       // Object Movement Functions
       static void move_selected_object(int, int);
       static void moveby(int speed) {obj_speed = speed;}
