@@ -27,6 +27,7 @@ interpreter::factory_map {
    {"polygon"  , &interpreter::make_polygon  },
    {"rectangle", &interpreter::make_rectangle},
    {"square"   , &interpreter::make_square   },
+   {"diamond"   , &interpreter::make_diamond   },
    {"triangle", &interpreter::make_triangle},
    {"equilateral"   , &interpreter::make_equilateral   },
 };
@@ -140,6 +141,13 @@ shape_ptr interpreter::make_square (param begin, param end) {
    if(end - begin != 1) throw runtime_error
             ("make_square: invalid number of args. Need 1.");
    return make_shared<square> (GLfloat(stof(begin[0])));
+}
+
+shape_ptr interpreter::make_diamond (param begin, param end) {
+   DEBUGF ('f', range (begin, end));
+   if(end - begin != 2) throw runtime_error
+            ("make_square: invalid number of args. Need 1.");
+   return make_shared<diamond> (GLfloat(stof(begin[0])), GLfloat(stof(begin[1])));
 }
 
 shape_ptr interpreter::make_triangle (param begin, param end) {

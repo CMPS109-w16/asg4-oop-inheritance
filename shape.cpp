@@ -76,6 +76,15 @@ square::square (GLfloat width): rectangle (width, width) {
    DEBUGF ('c', this);
 }
 
+diamond::diamond(const GLfloat width, const GLfloat height) :
+                  polygon(
+                           { { 0, GLfloat(.5) * height }, { GLfloat(.5)
+                                    * width, 0 }, { width, GLfloat(.5)
+                                    * height }, { GLfloat(.5) * width,
+                                    height } }) {
+   DEBUGF('c', this);
+}
+
 triangle::triangle(const vertex_list& vertices): polygon(vertices) {
    DEBUGF ('c', this);
 }
