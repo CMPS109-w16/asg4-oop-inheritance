@@ -25,7 +25,6 @@ class object {
          pshape(s), center(v), color(r)
          {}
       void draw() { pshape->draw (center, color); }
-//      void draw_border() { pshape->draw (center, color); }
       void move (GLfloat delta_x, GLfloat delta_y) {
          center.xpos += delta_x;
          center.ypos += delta_y;
@@ -61,6 +60,7 @@ class window {
       static int obj_speed;
       static int thickness;
       static string color;
+      static bool first_run;
    private:
       static void close();
       static void entry (int mouse_entered);
@@ -94,7 +94,8 @@ class window {
       static string get_color() {return color;}
       static bool get_draw_border(){return draw_border;}
       static void set_draw_border(bool border){draw_border = border;}
-
+      static bool get_first_run(){return first_run;}
+      static void set_first_run(bool run){first_run = run;}
 };
 
 #endif

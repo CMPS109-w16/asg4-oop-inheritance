@@ -17,6 +17,7 @@ mouse window::mus;
 int window::thickness = 4;
 string window::color = "grey";
 bool window::draw_border = false;
+bool window::first_run = true;
 
 // Executed when window system signals to shut down.
 void window::close() {
@@ -38,16 +39,21 @@ void window::entry (int mouse_entered) {
 
 // Called to display the objects in the window.
 void window::display() {
-   glClear (GL_COLOR_BUFFER_BIT);
-   for (auto& object: window::objects){
-      if(object.get_selected()){
-         window::set_draw_border(true);
-         object.draw();
-      } else {
-         window::set_draw_border(false);
-         object.draw();
+   glClear(GL_COLOR_BUFFER_BIT);
+   for (auto& object : window::objects) {
+      if (window::get_first_run()){
+         object.set_selected(true);
+         window::set_first_run(false);
       }
-   }
+         if (object.get_selected()) {
+            window::set_draw_border(true);
+            object.draw();
+         } else {
+            window::set_draw_border(false);
+            object.draw();
+         }
+      }
+
    mus.draw();
    glutSwapBuffers();
 }
