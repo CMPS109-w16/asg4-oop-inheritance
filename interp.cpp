@@ -103,7 +103,7 @@ shape_ptr interpreter::make_text (param begin, param end) {
 
 shape_ptr interpreter::make_ellipse (param begin, param end) {
    DEBUGF ('f', range (begin, end));
-   if(end - begin > 2) throw runtime_error
+   if(end - begin != 2) throw runtime_error
             ("Make_ellipse: invalid number of args. Need 2.");
    return make_shared<ellipse> (GLfloat(stof(begin[0])),
                                 GLfloat(stof(begin[1])));
@@ -146,14 +146,14 @@ shape_ptr interpreter::make_square (param begin, param end) {
 shape_ptr interpreter::make_diamond (param begin, param end) {
    DEBUGF ('f', range (begin, end));
    if(end - begin != 2) throw runtime_error
-            ("make_square: invalid number of args. Need 1.");
+            ("make_diamond: invalid number of args. Need 1.");
    return make_shared<diamond> (GLfloat(stof(begin[0])), GLfloat(stof(begin[1])));
 }
 
 shape_ptr interpreter::make_triangle (param begin, param end) {
    DEBUGF ('f', range (begin, end));
    if(((end - begin) % 2 )== 1 or (end - begin) != 6) throw runtime_error
-            ("make_polygon: invalid number of args. Need 6.");
+            ("make_triangle: invalid number of args. Need 6.");
 
    vertex_list vert_list{};
    for (auto itor = begin; itor != end; ++itor) {
