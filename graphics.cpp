@@ -1,5 +1,6 @@
 // $Id: graphics.cpp,v 1.1 2015-07-16 16:47:51-07 - - $
-
+// Partner: Darius Sakhapour(dsakhapo@ucsc.edu)
+// Partner: Ryan Wong (rystwong@ucsc.edu)
 #include <iostream>
 using namespace std;
 
@@ -14,9 +15,10 @@ int window::obj_speed = 4; // in pixels per keystroke.
 vector<object> window::objects;
 size_t window::selected_obj = 0;
 mouse window::mus;
-bool window::selected = false;
 int window::thickness = 4;
 string window::color = "red";
+bool window::draw_border = false;
+bool window::first_run = true;
 
 // Executed when window system signals to shut down.
 void window::close() {
@@ -38,8 +40,20 @@ void window::entry (int mouse_entered) {
 
 // Called to display the objects in the window.
 void window::display() {
-   glClear (GL_COLOR_BUFFER_BIT);
-   for (auto& object: window::objects) object.draw();
+   glClear(GL_COLOR_BUFFER_BIT);
+   for (auto& object : window::objects) {
+      if (window::get_first_run()) {
+         object.set_selected(true);
+         window::set_first_run(false);
+      }
+      if (object.get_selected()) {
+         window::set_draw_border(true);
+         object.draw();
+      } else {
+         window::set_draw_border(false);
+         object.draw();
+      }
+   }
    mus.draw();
    glutSwapBuffers();
 }
@@ -194,21 +208,32 @@ void window::move_selected_object(int xdelta, int ydelta) {
 }
 
 void window::select_object_next() {
-    if (window::selected_obj == window::objects.size() - 1)
-        selected_obj = 0;
-    else
-        window::selected_obj = window::selected_obj + 1;
+   window::objects.at(selected_obj).set_selected(false);
+   if (window::selected_obj == window::objects.size() - 1) {
+      selected_obj = 0;
+   } else {
+      window::selected_obj = window::selected_obj + 1;
+   }
+   window::objects.at(selected_obj).set_selected(true);
 }
 
 void window::select_object_prev() {
-    if (window::selected_obj == 0)
-        selected_obj = window::objects.size() - 1;
-    else
-        window::selected_obj = window::selected_obj - 1;
+   window::objects.at(selected_obj).set_selected(false);
+   if (window::selected_obj == 0) {
+      selected_obj = window::objects.size() - 1;
+   } else {
+      window::selected_obj = window::selected_obj - 1;
+   }
+   window::objects.at(selected_obj).set_selected(true);
 }
 
 void window::select_object(size_t obj) {
-    if (obj <  window::objects.size())
-        window::selected_obj = obj;
+   if (window::objects.size() - 1 < obj)
+      cout << "No such Index exists" << endl;
+   else{
+      window::objects.at(selected_obj).set_selected(false);
+      window::selected_obj = obj;
+      window::objects.at(selected_obj).set_selected(true);
+   }
 }
 

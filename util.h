@@ -5,7 +5,8 @@
 //    A utility class to provide various services not conveniently
 //    included in other modules.
 //
-
+// Partner: Darius Sakhapour(dsakhapo@ucsc.edu)
+// Partner: Ryan Wong (rystwong@ucsc.edu)
 #ifndef __UTIL_H__
 #define __UTIL_H__
 

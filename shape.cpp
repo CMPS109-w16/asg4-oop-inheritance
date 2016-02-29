@@ -1,5 +1,6 @@
 // $Id: shape.cpp,v 1.1 2015-07-16 16:47:51-07 - - $
-
+// Partner: Darius Sakhapour(dsakhapo@ucsc.edu)
+// Partner: Ryan Wong (rystwong@ucsc.edu)
 #include <typeinfo>
 #include <unordered_map>
 #include <cmath>
@@ -7,6 +8,7 @@ using namespace std;
 
 #include "shape.h"
 #include "util.h"
+#include "graphics.h"
 
 static unordered_map<void*,string> fontname {
    {GLUT_BITMAP_8_BY_13       , "Fixed-8x13"    },
@@ -40,6 +42,7 @@ void* find_fontcode(string font_name){
 
 void* search_fontcode(const string& font_name){
    auto i = fontcode.find(font_name);
+   if(i == fontcode.end()) throw runtime_error("invalid font");
    return i->second;
 }
 
@@ -123,6 +126,19 @@ void ellipse::draw (const vertex& center, const rgbcolor& color) const {
       glVertex2f(xpos, ypos);    //Specify polygon vertices (x,y)
    }
    glEnd();
+
+   if (window::get_draw_border()) {
+      glLineWidth(window::get_thickness());
+      glBegin(GL_LINE_LOOP);
+      glEnable(GL_LINE_SMOOTH);
+      glColor3ubv(rgbcolor(window::get_color()).ubvec);
+      for (float theta = 0; theta < 2 * M_PI; theta += delta) {
+         float xpos = dimension.xpos / 2 * cos(theta) + center.xpos;
+         float ypos = dimension.ypos / 2 * sin(theta) + center.ypos;
+         glVertex2f(xpos, ypos);
+      }
+      glEnd();
+   }
    DEBUGF ('d', this << "(" << center << "," << color << ")");
 }
 
@@ -143,6 +159,20 @@ void polygon::draw (const vertex& center, const rgbcolor& color) const {
       glVertex2f(xpos, ypos);
    }
    glEnd();
+
+   if(window::get_draw_border()){
+      glLineWidth(window::get_thickness());
+      glBegin(GL_LINE_LOOP);
+      glEnable(GL_LINE_SMOOTH);
+      glColor3ubv(rgbcolor(window::get_color()).ubvec);
+      for (auto itor = vertices.cbegin(); itor != vertices.cend();
+               ++itor) {
+         float xpos = center.xpos + itor->xpos - xavg;
+         float ypos = center.ypos + itor->ypos - yavg;
+         glVertex2f(xpos, ypos);
+      }
+      glEnd();
+   }
    DEBUGF ('d', this << "(" << center << "," << color << ")");
 }
 

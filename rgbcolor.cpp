@@ -1,5 +1,6 @@
 // $Id: rgbcolor.cpp,v 1.1 2015-07-16 16:47:51-07 - - $
-
+// Partner: Darius Sakhapour(dsakhapo@ucsc.edu)
+// Partner: Ryan Wong (rystwong@ucsc.edu)
 #include <cctype>
 #include <iomanip>
 #include <iostream>
