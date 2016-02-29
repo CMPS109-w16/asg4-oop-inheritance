@@ -108,7 +108,10 @@ equilateral::equilateral(GLfloat width) :
 }
 
 void text::draw (const vertex& center, const rgbcolor& color) const {
-   glColor3ubv(color.ubvec);
+   //Highlight all of the text if its selected
+   glColor3ubv(window::get_draw_border() ?
+            rgbcolor(window::get_color()).ubvec :
+            color.ubvec);
    glRasterPos2f(center.xpos, center.ypos);
    glutBitmapString(glut_bitmap_font,
             reinterpret_cast<const GLubyte*>(textdata.c_str()));
