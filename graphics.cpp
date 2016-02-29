@@ -14,6 +14,9 @@ int window::obj_speed = 4; // in pixels per keystroke.
 vector<object> window::objects;
 size_t window::selected_obj = 0;
 mouse window::mus;
+bool window::selected = false;
+int window::thickness = 4;
+string window::color = "red";
 
 // Executed when window system signals to shut down.
 void window::close() {

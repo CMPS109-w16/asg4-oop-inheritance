@@ -17,6 +17,7 @@ interpreter::interp_map {
    {"define" , &interpreter::do_define },
    {"draw"   , &interpreter::do_draw   },
    {"moveby"   , &interpreter::do_moveby  },
+   {"border" , &interpreter::do_border },
 };
 
 unordered_map<string,interpreter::factoryfn>
@@ -75,6 +76,11 @@ void interpreter::do_draw (param begin, param end) {
 void interpreter::do_moveby (param begin, param end) {
    DEBUGF ('f', range (begin, end));
    window::moveby(stoi(*begin));
+}
+
+void interpreter::do_border(param begin, param end){
+   DEBUGF ('f', range (begin, end));
+   window::border(begin[0], stoi(begin[1]));
 }
 
 shape_ptr interpreter::make_shape (param begin, param end) {

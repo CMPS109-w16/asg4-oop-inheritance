@@ -54,6 +54,8 @@ class window {
       static size_t selected_obj;
       static mouse mus;
       static int obj_speed;
+      static int thickness;
+      static string color;
    private:
       static void close();
       static void entry (int mouse_entered);
@@ -79,6 +81,8 @@ class window {
       static void move_selected_object(int, int);
       static void moveby(int speed) {obj_speed = speed;}
       static int get_obj_speed() {return obj_speed;}
+      static void border(const string& c, int t)
+         { color = c; thickness = t; }
 };
 
 #endif
