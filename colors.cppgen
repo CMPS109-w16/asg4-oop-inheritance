@@ -1,3 +1,6 @@
+// Partner: Darius Sakhapour(dsakhapo@ucsc.edu)
+// Partner: Ryan Wong (rystwong@ucsc.edu)
+
 // Data taken from source file /usr/share/X11/rgb.txt
 const unordered_map<string,rgbcolor> color_names = {
    {"alice-blue"            , rgbcolor (240, 248, 255)},
